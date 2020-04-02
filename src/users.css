@@ -1,0 +1,25 @@
+.authors {
+  display: inline-block;
+  border: black 1px solid;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.user-list, .user-form {
+  display: inline-block;
+  border: blue 1px solid;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.user-form label {
+  display: inline-block;
+  width: 125px;
+  margin-right: 5px;
+}
+
+.user-form input {
+  width: 150px;
+  margin-right: 5px;
+}
