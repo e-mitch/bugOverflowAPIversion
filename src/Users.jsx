@@ -130,13 +130,6 @@ function Users() {
   };
 
 React.useEffect(() => fetchUsers(), []);
-
-  let updateUser = (field, value) => {
-    let newUser = { ...currentUser }
-    newUser[field] = value;
-    setCurrentUser(newUser);
-  }
-
   let postNewUser = (user) => {
     const options = {
       method: 'POST',
@@ -154,6 +147,52 @@ React.useEffect(() => fetchUsers(), []);
     });
   }
 
+
+  let updateUser = (user) => {
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8'
+      },
+      body: JSON.stringify(user)
+    }
+    console.log('Attempting to update user')
+    console.log(user)
+    return fetch(`${apiURL}/users/${user.id}`, options).then(
+      async response => {
+        console.log('The PUT response.')
+        console.log(response)
+        if (response.ok && response.status === 204) {
+          return true
+        } else if (response.status === 422) {
+          const data = await response.json()
+          console.log('Validation message: ')
+          console.log(data)
+          throw new Error(`Server validation failed: ${data.message}`)
+        } else {
+          throw new Error(`Got a ${response.status} status.`)
+        }
+      }
+    )
+  }
+
+  let deleteUser = (user) => {
+    const options = {
+      method: 'DELETE'
+    }
+    console.log('Attempting to delete user with id ' + user.id)
+    return fetch(`${apiURL}/users/${user.id}`, options).then(async response => {
+      console.log('The DELETE response.')
+      console.log(response)
+      if (response.ok && response.status === 204) {
+        return true
+      } else {
+        throw new Error(`Got a ${response.status} status`)
+      }
+    });
+  } 
+
   let formSubmitted = () => {
     if (formMode === "new") {
       postNewUser(currentUser).then(data => {
@@ -166,13 +205,34 @@ React.useEffect(() => fetchUsers(), []);
           console.log("New user wasn't created because " + data.message);
         }
       });
-    } else {
-      alert("Change not submitted to server. (Just not part of this example.)")
+    } else if (formMode === "update") {
+      updateUser(currentUser).then(data =>{
+        console.log("Received data")
+        console.log(data);
+        if(!data.message){
+          currentUser.id = data.id;
+          setUserList([...userList, currentUser]);
+        } else {
+          console.log("User wasn't edited because " + data.message);
+        }
+      });
       let newUserList = [...userList];
       let userIndex = userList.findIndex((user) => user.id === currentUser.id);
 
       newUserList[userIndex] = currentUser;
       setUserList(newUserList);
+    }else if (formMode === "delete"){
+      deleteUser(currentUser).then(data => {
+        console.log("Received data")
+        console.log(data);
+        if(!data.message){
+          currentUser.id = data.id;
+          setUserList([...userList]);
+
+        }else{
+          console.log("User wasn't deleted because " + data.message);
+        }
+      });
     }
   }
 
@@ -186,9 +246,9 @@ React.useEffect(() => fetchUsers(), []);
     setCurrentUser(emptyUser)
   }
 
-  let deleteClicked = (id) => {
-    alert("Important: Not deleted on the server.  (Not part of this example.)")
-    setUserList(userList.filter((item) => item.id !== id));
+  let deleteClicked = (user) => {
+    setFormMode("delete");
+    setCurrentUser(user);
     cancelClicked();
   }
 
@@ -200,6 +260,6 @@ React.useEffect(() => fetchUsers(), []);
       <UserList users={userList} onEditClicked={editClicked} onDeleteClicked={deleteClicked} />
     </div>
   );
-}
+  }
 
 export default Users;
