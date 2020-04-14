@@ -210,25 +210,21 @@ React.useEffect(() => fetchUsers(), []);
         console.log("Received data")
         console.log(data);
         if(!data.message){
-          currentUser.id = data.id;
-          setUserList([...userList, currentUser]);
+          let newUserList = [...userList];
+          let userIndex = userList.findIndex((user) => user.id === currentUser.id);
+          newUserList[userIndex] = currentUser;
+          setUserList(newUserList);
         } else {
           console.log("User wasn't edited because " + data.message);
         }
       });
-      let newUserList = [...userList];
-      let userIndex = userList.findIndex((user) => user.id === currentUser.id);
-
-      newUserList[userIndex] = currentUser;
-      setUserList(newUserList);
+      
     }else if (formMode === "delete"){
       deleteUser(currentUser).then(data => {
         console.log("Received data")
         console.log(data);
         if(!data.message){
-          currentUser.id = data.id;
-          setUserList([...userList]);
-
+          //add code to update userList
         }else{
           console.log("User wasn't deleted because " + data.message);
         }
@@ -254,7 +250,7 @@ React.useEffect(() => fetchUsers(), []);
 
   return (
     <div className="users">
-      <UserForm formMode={formMode} user={currentUser} updateUser={updateUser}
+      <UserForm formMode={formMode} user={currentUser} updateUser={currentUser}
         submitCallback={formSubmitted} cancelCallback={cancelClicked} />
       <div />
       <UserList users={userList} onEditClicked={editClicked} onDeleteClicked={deleteClicked} />
