@@ -148,7 +148,13 @@ React.useEffect(() => fetchUsers(), []);
   }
 
 
-  let updateUser = (user) => {
+  const updateUser = (field, value) => {
+    let newUser = {...currentUser}
+    newUser[field] = value;
+    setCurrentUser (newUser);
+  }
+  
+  let putEditedUser = (user) => {
     const options = {
       method: 'PUT',
       headers: {
@@ -206,7 +212,8 @@ React.useEffect(() => fetchUsers(), []);
         }
       });
     } else if (formMode === "update") {
-      updateUser(currentUser).then(data =>{
+      updateUser(currentUser);
+      putEditedUser(currentUser).then(data =>{
         console.log("Received data")
         console.log(data);
         if(!data.message){
