@@ -224,16 +224,6 @@ React.useEffect(() => fetchUsers(), []);
         }
       });
       
-    }else if (formMode === "delete"){
-      deleteUser(currentUser).then(data => {
-        console.log("Received data")
-        console.log(data);
-        if(!data.message){
-          //add code to update userList
-        }else{
-          console.log("User wasn't deleted because " + data.message);
-        }
-      });
     }
   }
 
@@ -248,14 +238,21 @@ React.useEffect(() => fetchUsers(), []);
   }
 
   let deleteClicked = (user) => {
-    setFormMode("delete");
-    setCurrentUser(user);
-    cancelClicked();
+    deleteUser(currentUser).then(data => {
+      console.log("Received data")
+      console.log(data);
+      if(!data.message){
+        fetchUsers();
+      }else{
+        console.log("User wasn't deleted because " + data.message);
+      }
+    });
+    
   }
 
   return (
     <div className="users">
-      <UserForm formMode={formMode} user={currentUser} updateUser={currentUser}
+      <UserForm formMode={formMode} user={currentUser} updateUser={updateUser}
         submitCallback={formSubmitted} cancelCallback={cancelClicked} />
       <div />
       <UserList users={userList} onEditClicked={editClicked} onDeleteClicked={deleteClicked} />
