@@ -147,11 +147,10 @@ React.useEffect(() => fetchUsers(), []);
     });
   }
 
-
   const updateUser = (field, value) => {
-    let newUser = {...currentUser}
-    newUser[field] = value;
-    setCurrentUser (newUser);
+    const newUser = {...currentUser}
+    newUser[field] = value
+    setCurrentUser (newUser)
   }
   
   let putEditedUser = (user) => {
@@ -212,7 +211,6 @@ React.useEffect(() => fetchUsers(), []);
         }
       });
     } else if (formMode === "update") {
-      updateUser(currentUser);
       putEditedUser(currentUser).then(data =>{
         console.log("Received data")
         console.log(data);
