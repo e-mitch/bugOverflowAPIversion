@@ -164,8 +164,10 @@ React.useEffect(() => fetchUsers(), []);
     }
     console.log('Attempting to update user')
     console.log(user)
-    return fetch(`${apiURL}/users/${user.id}`, options).then(
+    return fetch(`${apiURL}/users/${currentUser.id}`, options).then(
+      
       async response => {
+        console.log("user id: " + currentUser.id);
         console.log('The PUT response.')
         console.log(response)
         if (response.ok && response.status === 204) {
@@ -223,8 +225,9 @@ React.useEffect(() => fetchUsers(), []);
           console.log("User wasn't edited because " + data.message);
         }
       });
-      
     }
+    setFormMode("new");
+    setCurrentUser(emptyUser);
   }
 
   let editClicked = (user) => {
@@ -247,7 +250,8 @@ React.useEffect(() => fetchUsers(), []);
         console.log("User wasn't deleted because " + data.message);
       }
     });
-    
+    setCurrentUser(user);
+    cancelClicked();
   }
 
   return (
