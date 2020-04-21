@@ -71,7 +71,7 @@ function UserListItem({ user, onEditClicked, onDeleteClicked }) {
         <button className="btn btn-success btn-sm" onClick={event => onEditClicked(user)}>
           <i className="glyphicon glyphicon-pencil"></i> Edit
           </button>
-        <button className="btn btn-danger btn-sm" onClick={event => onDeleteClicked(user.id)}>
+        <button className="btn btn-danger btn-sm" onClick={event => onDeleteClicked(user)}>
           <i className="glyphicon glyphicon-remove"></i> Delete
           </button>
       </td>
